@@ -46,6 +46,12 @@ echo "✅ Build completed successfully"
 # Create or switch to deployment branch
 echo "🌿 Switching to $DEPLOY_BRANCH branch..."
 
+# CRITICAL: Backup .env file before switching branches
+if [ -f ".env" ]; then
+    cp .env /tmp/flowbook_env_backup
+    echo "⚠️  Backed up .env file"
+fi
+
 # Check if production branch exists
 if git show-ref --verify --quiet refs/heads/$DEPLOY_BRANCH; then
     # Branch exists, switch to it
@@ -98,5 +104,11 @@ echo "📌 Deploy branch: $DEPLOY_BRANCH"
 # Return to original branch
 echo "🔄 Returning to $CURRENT_BRANCH..."
 git checkout $CURRENT_BRANCH
+
+# CRITICAL: Restore .env file
+if [ -f "/tmp/flowbook_env_backup" ]; then
+    mv /tmp/flowbook_env_backup .env
+    echo "✅ Restored .env file"
+fi
 
 echo "🎉 Done! Your VPS should now pull from the '$DEPLOY_BRANCH' branch."

@@ -46,6 +46,13 @@ Write-Host "Build completed successfully" -ForegroundColor Green
 # Create or switch to deployment branch
 Write-Host "Switching to $DEPLOY_BRANCH branch..." -ForegroundColor Cyan
 
+# CRITICAL: Backup .env file before switching branches
+$envBackup = $null
+if (Test-Path ".env") {
+    $envBackup = Get-Content ".env" -Raw
+    Write-Host "Backed up .env file" -ForegroundColor Yellow
+}
+
 # Check if production branch exists
 $branchExists = git show-ref --verify --quiet "refs/heads/$DEPLOY_BRANCH"
 if ($LASTEXITCODE -eq 0) {
@@ -91,5 +98,11 @@ Write-Host "Deploy branch: $DEPLOY_BRANCH" -ForegroundColor Yellow
 # Return to original branch
 Write-Host "Returning to $CURRENT_BRANCH..." -ForegroundColor Cyan
 git checkout $CURRENT_BRANCH
+
+# CRITICAL: Restore .env file
+if ($envBackup) {
+    Set-Content -Path ".env" -Value $envBackup -NoNewline
+    Write-Host "Restored .env file" -ForegroundColor Green
+}
 
 Write-Host "Done! Your VPS should now pull from the '$DEPLOY_BRANCH' branch." -ForegroundColor Green
