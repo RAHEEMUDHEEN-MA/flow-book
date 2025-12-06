@@ -56,18 +56,30 @@ else
     git rm -rf . 2>/dev/null || true
 fi
 
-# Copy dist files to root
+# Copy ONLY dist files to root (exclude .env and source files)
 echo "📦 Copying build files..."
 cp -r $BUILD_DIR/* .
 cp $BUILD_DIR/.* . 2>/dev/null || true
 
-# Create .gitignore for production branch
+# Create .gitignore for production branch (CRITICAL: exclude .env)
 cat > .gitignore << EOF
-# Keep production branch clean
+# Production branch - only built files
 node_modules
 *.log
-.env.local
+.env
+.env.*
+src/
+package.json
+package-lock.json
+tsconfig.json
+vite.config.ts
 EOF
+
+# Remove .env if it exists (safety check)
+if [ -f ".env" ]; then
+    rm -f .env
+    echo "⚠️  Removed .env file from production branch"
+fi
 
 # Add and commit
 echo "💾 Committing changes..."

@@ -57,12 +57,18 @@ if ($LASTEXITCODE -eq 0) {
     git rm -rf . 2>$null
 }
 
-# Copy dist files to root
+# Copy ONLY dist files to root (exclude .env and source files)
 Write-Host "Copying build files..." -ForegroundColor Cyan
 Copy-Item -Path "$BUILD_DIR\*" -Destination "." -Recurse -Force
 
-# Create .gitignore for production branch
-Set-Content -Path ".gitignore" -Value "# Keep production branch clean`nnode_modules`n*.log`n.env.local" -Encoding UTF8
+# Create .gitignore for production branch (CRITICAL: exclude .env)
+Set-Content -Path ".gitignore" -Value "# Production branch - only built files`nnode_modules`n*.log`n.env`n.env.*`nsrc/`npackage.json`npackage-lock.json`ntsconfig.json`nvite.config.ts" -Encoding UTF8
+
+# Remove .env if it exists (safety check)
+if (Test-Path ".env") {
+    Remove-Item ".env" -Force
+    Write-Host "Removed .env file from production branch" -ForegroundColor Yellow
+}
 
 # Add and commit
 Write-Host "Committing changes..." -ForegroundColor Cyan
