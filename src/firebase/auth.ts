@@ -7,6 +7,7 @@ import {
 import { auth } from './config';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './config';
+import { getFirebaseErrorInfo, logFirebaseError } from '../lib/firebase-error-handler';
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -29,7 +30,15 @@ export const signInWithGoogle = async (): Promise<User> => {
     
     return user;
   } catch (error) {
-    console.error('Error signing in with Google:', error);
+    logFirebaseError(error, 'Google Sign-in');
+    const errorInfo = getFirebaseErrorInfo(error);
+    
+    // You can show this error in your UI toast/notification system
+    console.error(`${errorInfo.title}: ${errorInfo.message}`);
+    if (errorInfo.action) {
+      console.info(`Suggested action: ${errorInfo.action}`);
+    }
+    
     throw error;
   }
 };
@@ -38,7 +47,7 @@ export const signOutUser = async (): Promise<void> => {
   try {
     await firebaseSignOut(auth);
   } catch (error) {
-    console.error('Error signing out:', error);
+    logFirebaseError(error, 'Sign-out');
     throw error;
   }
 };

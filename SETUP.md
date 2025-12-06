@@ -30,11 +30,15 @@
    - Enable **Storage** (optional, for attachments)
    - Copy your config from Project Settings → General → Your apps
 
-4. **Deploy Firestore Rules**
+4. **Deploy Firestore Rules & Indexes**
    
    - Go to Firestore Database → Rules
    - Copy contents from `firestore.rules`
    - Paste and publish
+   
+   - Go to Firestore Database → Indexes
+   - Click "Add Index" or use the auto-generated link from error messages
+   - Required indexes are defined in `firestore.indexes.json`
 
 5. **PWA Icons** (Optional but recommended)
    

@@ -23,7 +23,6 @@ export const AddEntryPage = () => {
     date: new Date(),
     description: '',
     tags: [],
-    attachmentUrl: undefined,
   });
 
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
@@ -56,7 +55,7 @@ export const AddEntryPage = () => {
 
     setSaving(true);
     try {
-      let attachmentUrl = formData.attachmentUrl;
+      let attachmentUrl: string | undefined = undefined;
 
       // Upload attachment if provided
       if (attachmentFile) {
@@ -64,11 +63,18 @@ export const AddEntryPage = () => {
         attachmentUrl = await uploadAttachment(attachmentFile, user.uid, tempEntryId);
       }
 
-      await createEntry({
+      // Prepare entry data
+      const entryToCreate: EntryInput = {
         ...formData,
         bookId: id,
-        attachmentUrl,
-      });
+      };
+
+      // Only add attachmentUrl if it exists
+      if (attachmentUrl) {
+        entryToCreate.attachmentUrl = attachmentUrl;
+      }
+
+      await createEntry(entryToCreate);
 
       navigate(`/book/${id}`);
     } catch (error) {

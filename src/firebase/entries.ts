@@ -46,12 +46,25 @@ export const createEntry = async (entryData: EntryInput): Promise<string> => {
       await createOrUpdateTag(entryData.ownerUid, tag);
     }
     
-    const docRef = await addDoc(collection(db, 'entries'), {
-      ...entryData,
+    // Prepare data, removing undefined fields
+    const dataToSave: any = {
+      bookId: entryData.bookId,
+      ownerUid: entryData.ownerUid,
+      type: entryData.type,
+      amount: entryData.amount,
       date: Timestamp.fromDate(entryData.date),
+      description: entryData.description,
+      tags: entryData.tags,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
-    });
+    };
+    
+    // Only add attachmentUrl if it's defined
+    if (entryData.attachmentUrl) {
+      dataToSave.attachmentUrl = entryData.attachmentUrl;
+    }
+    
+    const docRef = await addDoc(collection(db, 'entries'), dataToSave);
     return docRef.id;
   } catch (error) {
     console.error('Error creating entry:', error);
@@ -74,9 +87,17 @@ export const updateEntry = async (
     
     const entryRef = doc(db, 'entries', entryId);
     const updateData: any = {
-      ...entryData,
       updatedAt: serverTimestamp(),
     };
+    
+    // Only add fields that are defined
+    if (entryData.bookId !== undefined) updateData.bookId = entryData.bookId;
+    if (entryData.ownerUid !== undefined) updateData.ownerUid = entryData.ownerUid;
+    if (entryData.type !== undefined) updateData.type = entryData.type;
+    if (entryData.amount !== undefined) updateData.amount = entryData.amount;
+    if (entryData.description !== undefined) updateData.description = entryData.description;
+    if (entryData.tags !== undefined) updateData.tags = entryData.tags;
+    if (entryData.attachmentUrl !== undefined) updateData.attachmentUrl = entryData.attachmentUrl;
     
     if (entryData.date) {
       updateData.date = Timestamp.fromDate(entryData.date);
