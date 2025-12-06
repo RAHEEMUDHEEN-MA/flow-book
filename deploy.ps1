@@ -43,6 +43,30 @@ if (-not (Test-Path $BUILD_DIR)) {
 
 Write-Host "Build completed successfully" -ForegroundColor Green
 
+# Preview the build
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "  PREVIEW MODE" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "Starting preview server..." -ForegroundColor Yellow
+Write-Host "Press Ctrl+C in the preview window when done reviewing" -ForegroundColor Yellow
+Write-Host ""
+
+# Start preview server in a new window
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PWD'; npx serve -s $BUILD_DIR"
+
+# Wait for user confirmation
+Write-Host ""
+$response = Read-Host "Preview the build in your browser. Continue with deployment? (y/n)"
+if ($response -ne 'y' -and $response -ne 'Y') {
+    Write-Host "Deployment cancelled by user" -ForegroundColor Red
+    # Kill the preview server
+    Get-Process | Where-Object {$_.ProcessName -eq "node" -and $_.CommandLine -like "*serve*"} | Stop-Process -Force 2>$null
+    exit 1
+}
+
+Write-Host "Proceeding with deployment..." -ForegroundColor Green
+
 # Create or switch to deployment branch
 Write-Host "Switching to $DEPLOY_BRANCH branch..." -ForegroundColor Cyan
 

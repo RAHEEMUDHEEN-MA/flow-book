@@ -43,6 +43,34 @@ fi
 
 echo "✅ Build completed successfully"
 
+# Preview the build
+echo ""
+echo "========================================"
+echo "  PREVIEW MODE"
+echo "========================================"
+echo "Starting preview server..."
+echo "Open http://localhost:3000 in your browser"
+echo ""
+
+# Start preview server in background
+npx serve -s $BUILD_DIR &
+PREVIEW_PID=$!
+
+# Wait for user confirmation
+echo ""
+read -p "Preview the build in your browser. Continue with deployment? (y/n) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "❌ Deployment cancelled by user"
+    # Kill the preview server
+    kill $PREVIEW_PID 2>/dev/null
+    exit 1
+fi
+
+# Kill the preview server
+kill $PREVIEW_PID 2>/dev/null
+echo "✅ Proceeding with deployment..."
+
 # Create or switch to deployment branch
 echo "🌿 Switching to $DEPLOY_BRANCH branch..."
 
