@@ -29,3 +29,6 @@ dist-ssr
 .env.production.local
 .env.development.local
 
+# Deployment (these files are for local use only)
+# The production branch will have its own .gitignore
+
