@@ -8,7 +8,7 @@ interface EntryCardProps {
 }
 
 export const EntryCard = ({ entry, onEdit, onDelete }: EntryCardProps) => {
-  const date = entry.date?.toDate ? entry.date.toDate() : new Date(entry.date);
+  const date = entry.date?.toDate ? entry.date.toDate() : new Date(entry.date as any);
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">

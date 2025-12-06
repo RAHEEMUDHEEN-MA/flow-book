@@ -7,7 +7,7 @@ import { getEntriesByBook, Entry, deleteEntry } from '../firebase/entries';
 import { getUserTags, UserTag } from '../firebase/tags';
 import { FilterBar, FilterState } from '../components/FilterBar';
 import { EntryCard } from '../components/EntryCard';
-import { format, isAfter, isBefore, parseISO } from 'date-fns';
+import { isAfter, isBefore, parseISO } from 'date-fns';
 
 export const BookDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -81,7 +81,7 @@ export const BookDetailPage = () => {
       }
 
       // Date range filter
-      const entryDate = entry.date?.toDate ? entry.date.toDate() : new Date(entry.date);
+      const entryDate = entry.date?.toDate ? entry.date.toDate() : new Date(entry.date as any);
       if (filters.dateFrom) {
         const fromDate = parseISO(filters.dateFrom);
         if (isBefore(entryDate, fromDate)) return false;

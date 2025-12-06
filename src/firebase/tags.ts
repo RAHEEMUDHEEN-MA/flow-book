@@ -2,9 +2,7 @@ import {
   collection, 
   doc, 
   setDoc, 
-  getDocs, 
-  query, 
-  where,
+  getDocs,
   serverTimestamp 
 } from 'firebase/firestore';
 import { db } from './config';
