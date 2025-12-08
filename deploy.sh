@@ -95,6 +95,12 @@ echo "📦 Copying build files..."
 cp -r $BUILD_DIR/* .
 cp $BUILD_DIR/.* . 2>/dev/null || true
 
+# IMPORTANT: Remove the dist folder to avoid duplication
+if [ -d "$BUILD_DIR" ]; then
+    rm -rf $BUILD_DIR
+    echo "🗑️  Removed dist folder to prevent duplication"
+fi
+
 # Create .gitignore for production branch (CRITICAL: exclude .env)
 cat > .gitignore << EOF
 # Production branch - only built files

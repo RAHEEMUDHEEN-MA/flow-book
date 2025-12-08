@@ -92,6 +92,12 @@ if ($LASTEXITCODE -eq 0) {
 Write-Host "Copying build files..." -ForegroundColor Cyan
 Copy-Item -Path "$BUILD_DIR\*" -Destination "." -Recurse -Force
 
+# IMPORTANT: Remove the dist folder to avoid duplication
+if (Test-Path $BUILD_DIR) {
+    Remove-Item -Path $BUILD_DIR -Recurse -Force
+    Write-Host "Removed dist folder to prevent duplication" -ForegroundColor Yellow
+}
+
 # Create .gitignore for production branch (CRITICAL: exclude .env)
 Set-Content -Path ".gitignore" -Value "# Production branch - only built files`nnode_modules`n*.log`n.env`n.env.*`nsrc/`npackage.json`npackage-lock.json`ntsconfig.json`nvite.config.ts" -Encoding UTF8
 
