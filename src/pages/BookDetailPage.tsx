@@ -131,54 +131,54 @@ export const BookDetailPage = () => {
 
   if (loading || loadingData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-gray-500 dark:text-gray-400">Loading...</div>
       </div>
     );
   }
 
   if (!book) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Book not found</div>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-gray-500 dark:text-gray-400">Book not found</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24 transition-colors">
       <div className="max-w-4xl mx-auto px-4 py-6">
         {/* Header */}
         <div className="mb-6">
           <Link
             to="/"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4"
+            className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
           >
             ← Back to Books
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">{book.name}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{book.name}</h1>
         </div>
 
         {/* Summary Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4">Summary</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">Summary</h2>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <p className="text-xs text-gray-500 mb-1">Income</p>
-              <p className="text-lg font-bold text-green-600">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Income</p>
+              <p className="text-lg font-bold text-green-600 dark:text-green-400">
                 +₹{summary.income.toLocaleString('en-IN')}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 mb-1">Expense</p>
-              <p className="text-lg font-bold text-red-600">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Expense</p>
+              <p className="text-lg font-bold text-red-600 dark:text-red-400">
                 -₹{summary.expense.toLocaleString('en-IN')}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 mb-1">Balance</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Balance</p>
               <p className={`text-lg font-bold ${
-                summary.balance >= 0 ? 'text-green-600' : 'text-red-600'
+                summary.balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
               }`}>
                 ₹{summary.balance.toLocaleString('en-IN')}
               </p>
@@ -192,8 +192,8 @@ export const BookDetailPage = () => {
         {/* Entries List */}
         <div className="space-y-3">
           {filteredEntries.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-              <p className="text-gray-500">No entries found</p>
+            <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+              <p className="text-gray-500 dark:text-gray-400">No entries found</p>
             </div>
           ) : (
             filteredEntries.map((entry) => (
