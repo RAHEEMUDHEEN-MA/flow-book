@@ -25,7 +25,7 @@ export const EntryCard = ({ entry, onEdit, onDelete }: EntryCardProps) => {
             <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">{entry.description}</p>
           )}
           <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-            <span>{format(date, 'MMM dd, yyyy')}</span>
+            <span>{format(date, 'MMM dd, yyyy h:mm a')}</span>
             {entry.tags && entry.tags.length > 0 && (
               <>
                 <span>•</span>

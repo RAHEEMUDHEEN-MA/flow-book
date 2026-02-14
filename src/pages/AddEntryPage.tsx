@@ -6,6 +6,7 @@ import { createEntry, EntryInput } from '../firebase/entries';
 import { getUserTags, UserTag } from '../firebase/tags';
 import { TagInput } from '../components/TagInput';
 import { uploadAttachment } from '../firebase/storage';
+import { format } from 'date-fns';
 
 export const AddEntryPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -154,16 +155,16 @@ export const AddEntryPage = () => {
             />
           </div>
 
-          {/* Date */}
+          {/* Date & Time */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Date *
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Date & Time *
             </label>
             <input
-              type="date"
-              value={formData.date.toISOString().split('T')[0]}
-              onChange={(e) => setFormData(prev => ({ ...prev, date: new Date(e.target.value) }))}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              type="datetime-local"
+              value={formData.date ? format(formData.date, "yyyy-MM-dd'T'HH:mm") : ''}
+              onChange={(e) => e.target.value && setFormData(prev => ({ ...prev, date: new Date(e.target.value) }))}
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               required
             />
           </div>
