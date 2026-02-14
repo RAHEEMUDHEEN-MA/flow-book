@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/config';
-import { getBooksByUser, createBook, Book } from '../firebase/books';
-import { getEntriesByBook, Entry } from '../firebase/entries';
+import { getBooksByUser, createBook, deleteBook, Book } from '../firebase/books';
+import { getEntriesByBook, deleteEntriesByBook, Entry } from '../firebase/entries';
 import { BookCard } from '../components/BookCard';
 import { InstallPrompt } from '../components/InstallPrompt';
 
@@ -15,6 +15,9 @@ export const BooksPage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newBookName, setNewBookName] = useState('');
   const [creating, setCreating] = useState(false);
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
+  const [deleteConfirm, setDeleteConfirm] = useState<{ bookId: string; bookName: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,6 +71,35 @@ export const BooksPage = () => {
     }
   };
 
+  const handleDeleteClick = (bookId: string, bookName: string) => {
+    setDeleteConfirm({ bookId, bookName });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteConfirm) return;
+
+    setDeleting(true);
+    try {
+      // Delete all entries first
+      await deleteEntriesByBook(deleteConfirm.bookId);
+      // Then delete the book
+      await deleteBook(deleteConfirm.bookId);
+      setDeleteConfirm(null);
+      await loadBooks();
+    } catch (error) {
+      console.error('Error deleting book:', error);
+      alert('Failed to delete book');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const sortedBooks = [...books].sort((a, b) => {
+    const timeA = a.createdAt?.toMillis?.() || 0;
+    const timeB = b.createdAt?.toMillis?.() || 0;
+    return sortOrder === 'newest' ? timeB - timeA : timeA - timeB;
+  });
+
   if (loading || loadingBooks) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -81,12 +113,31 @@ export const BooksPage = () => {
       <div className="max-w-4xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900">My Books</h1>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors font-medium"
-          >
-            + New Book
-          </button>
+          <div className="flex gap-2">
+            {books.length > 0 && (
+              <button
+                onClick={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}
+                className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                title={sortOrder === 'newest' ? 'Sorted: Newest First (click for Oldest First)' : 'Sorted: Oldest First (click for Newest First)'}
+              >
+                {sortOrder === 'newest' ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </button>
+            )}
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors font-medium whitespace-nowrap"
+            >
+              + New Book
+            </button>
+          </div>
         </div>
 
         {books.length === 0 ? (
@@ -95,11 +146,12 @@ export const BooksPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {books.map((book) => (
+            {sortedBooks.map((book) => (
               <BookCard
                 key={book.id}
                 book={book}
                 entries={entriesMap[book.id] || []}
+                onDelete={handleDeleteClick}
               />
             ))}
           </div>
@@ -141,6 +193,37 @@ export const BooksPage = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Delete Book</h2>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete <span className="font-semibold">"{deleteConfirm.bookName}"</span>? 
+              This will permanently delete the book and all its entries. This action cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirm(null)}
+                disabled={deleting}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={deleting}
+                className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
           </div>
         </div>
       )}

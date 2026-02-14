@@ -137,3 +137,20 @@ export const getEntriesByBook = async (bookId: string): Promise<Entry[]> => {
   }
 };
 
+export const deleteEntriesByBook = async (bookId: string): Promise<void> => {
+  try {
+    const q = query(
+      collection(db, 'entries'),
+      where('bookId', '==', bookId)
+    );
+    const querySnapshot = await getDocs(q);
+    
+    // Delete all entries in batch
+    const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
+  } catch (error) {
+    console.error('Error deleting entries by book:', error);
+    throw error;
+  }
+};
+

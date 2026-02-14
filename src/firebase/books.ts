@@ -6,6 +6,7 @@ import {
   getDocs, 
   doc, 
   getDoc,
+  deleteDoc,
   serverTimestamp 
 } from 'firebase/firestore';
 import { db } from './config';
@@ -55,6 +56,16 @@ export const getBookById = async (bookId: string): Promise<Book | null> => {
     return null;
   } catch (error) {
     console.error('Error fetching book:', error);
+    throw error;
+  }
+};
+
+export const deleteBook = async (bookId: string): Promise<void> => {
+  try {
+    const docRef = doc(db, 'books', bookId);
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.error('Error deleting book:', error);
     throw error;
   }
 };
