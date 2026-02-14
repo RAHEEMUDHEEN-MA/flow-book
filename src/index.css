@@ -11,6 +11,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Ensure background color is consistent */
+html.dark body {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
 * {
   box-sizing: border-box;
 }

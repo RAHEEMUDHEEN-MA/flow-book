@@ -16,6 +16,33 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="FlowBook" />
   <title>Flow Book</title>
+  <script>
+
+    (function () {
+      try {
+        const savedMode = localStorage.getItem('darkMode');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedMode === 'true') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {
+        console.error('Error checking dark mode preference', e);
+      }
+    })();
+  </script>
+  <style>
+    /* Critical CSS to prevent white flash in dark mode */
+    html.dark,
+    html.dark body {
+      background-color: #111827;
+      /* gray-900 */
+      color: #f9fafb;
+      /* gray-50 */
+    }
+  </style>
 </head>
 
 <body>
