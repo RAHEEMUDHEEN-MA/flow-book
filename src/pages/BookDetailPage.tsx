@@ -106,16 +106,16 @@ export const BookDetailPage = () => {
   }, [entries, filters]);
 
   const summary = useMemo(() => {
-    const income = filteredEntries
+    const income = entries
       .filter(e => e.type === 'income')
       .reduce((sum, e) => sum + e.amount, 0);
     
-    const expense = filteredEntries
+    const expense = entries
       .filter(e => e.type === 'expense')
       .reduce((sum, e) => sum + e.amount, 0);
     
     return { income, expense, balance: income - expense };
-  }, [filteredEntries]);
+  }, [entries]);
 
   const handleDeleteEntry = async (entryId: string) => {
     if (!confirm('Are you sure you want to delete this entry?')) return;

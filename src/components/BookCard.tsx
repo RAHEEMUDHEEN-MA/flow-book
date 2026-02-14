@@ -102,9 +102,9 @@ export const BookCard = ({ book, entries, onDelete }: BookCardProps) => {
             <div className="flex items-start justify-between mb-1">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white pr-10">{book.name}</h3>
             </div>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            {/* <span className="text-xs text-gray-500 dark:text-gray-400">
               {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
-            </span>
+            </span> */}
           </div>
           
           <div className="space-y-2">
