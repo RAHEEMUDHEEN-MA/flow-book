@@ -25,6 +25,8 @@ export const BookDetailPage = () => {
     amountMin: '',
     amountMax: '',
   });
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -117,15 +119,23 @@ export const BookDetailPage = () => {
     return { income, expense, balance: income - expense };
   }, [entries]);
 
-  const handleDeleteEntry = async (entryId: string) => {
-    if (!confirm('Are you sure you want to delete this entry?')) return;
+  const handleDeleteClick = (entryId: string) => {
+    setDeleteConfirm(entryId);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!deleteConfirm) return;
+
+    setDeleting(true);
     try {
-      await deleteEntry(entryId);
+      await deleteEntry(deleteConfirm);
+      setDeleteConfirm(null);
       await loadData();
     } catch (error) {
       console.error('Error deleting entry:', error);
       alert('Failed to delete entry');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -200,12 +210,42 @@ export const BookDetailPage = () => {
               <EntryCard
                 key={entry.id}
                 entry={entry}
-                onDelete={handleDeleteEntry}
+                onDelete={handleDeleteClick}
               />
             ))
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Delete Entry</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Are you sure you want to delete this entry? This action cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirm(null)}
+                disabled={deleting}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={deleting}
+                className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Floating Add Button */}
       <Link
