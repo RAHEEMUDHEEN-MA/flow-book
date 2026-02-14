@@ -1,0 +1,10 @@
+﻿# Production branch - only built files
+node_modules
+*.log
+.env
+.env.*
+src/
+package.json
+package-lock.json
+tsconfig.json
+vite.config.ts

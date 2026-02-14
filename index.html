@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/app.svg" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/pwa-96x96.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/pwa-512x512.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#14b8a6" />
+  <meta name="description" content="Personal finance tracking PWA" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="FlowBook" />
+  <title>Flow Book</title>
+  <script>
+
+    (function () {
+      try {
+        const savedMode = localStorage.getItem('darkMode');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedMode === 'true') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {
+        console.error('Error checking dark mode preference', e);
+      }
+    })();
+  </script>
+  <style>
+    /* Critical CSS to prevent white flash in dark mode */
+    html.dark,
+    html.dark body {
+      background-color: #111827;
+      /* gray-900 */
+      color: #f9fafb;
+      /* gray-50 */
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/index-FcG6X-q1.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Dw34firS.css">
+<link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+</html>
