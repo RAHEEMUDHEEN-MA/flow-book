@@ -164,7 +164,7 @@ export const AddEntryPage = () => {
               type="datetime-local"
               value={formData.date ? format(formData.date, "yyyy-MM-dd'T'HH:mm") : ''}
               onChange={(e) => e.target.value && setFormData(prev => ({ ...prev, date: new Date(e.target.value) }))}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-2 sm:px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 min-w-0 max-w-full"
               required
             />
           </div>

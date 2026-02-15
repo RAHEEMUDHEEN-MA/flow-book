@@ -151,7 +151,7 @@ export const FilterBar = ({ tags, onFilterChange }: FilterBarProps) => {
                 type="date"
                 value={filters.dateFrom}
                 onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 min-w-0 max-w-full"
               />
             </div>
             <div>
@@ -162,7 +162,7 @@ export const FilterBar = ({ tags, onFilterChange }: FilterBarProps) => {
                 type="date"
                 value={filters.dateTo}
                 onChange={(e) => handleFilterChange('dateTo', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 min-w-0 max-w-full"
               />
             </div>
           </div>
@@ -178,7 +178,7 @@ export const FilterBar = ({ tags, onFilterChange }: FilterBarProps) => {
                 value={filters.amountMin}
                 onChange={(e) => handleFilterChange('amountMin', e.target.value)}
                 placeholder="0"
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 min-w-0 max-w-full"
               />
             </div>
             <div>
@@ -190,7 +190,7 @@ export const FilterBar = ({ tags, onFilterChange }: FilterBarProps) => {
                 value={filters.amountMax}
                 onChange={(e) => handleFilterChange('amountMax', e.target.value)}
                 placeholder="∞"
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 min-w-0 max-w-full"
               />
             </div>
           </div>
